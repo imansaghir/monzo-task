@@ -31,9 +31,9 @@ clean-targets:
 models:
   monzo:
     # Configs that apply to all models
-    +persist_docs:
-      relation: true
-      columns: true
+  +persist_docs:
+    relation: true
+    columns: true
 
     # Staging layer: raw data with minimal transformations
     staging:

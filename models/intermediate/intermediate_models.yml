@@ -38,6 +38,8 @@ models:
         description: "Number of days since the last account closure"
       - name: days_since_last_reopen
         description: "Number of days since the last account reopening"
+      - name: has_ever_been_closed
+        description: "Flag indicating if the account has ever been closed"
       - name: total_closures
         description: "Total number of times the account has been closed"
         data_tests:
