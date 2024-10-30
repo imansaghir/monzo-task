@@ -63,8 +63,8 @@ monzo:
     dev:
       type: bigquery
       method: oauth
-      project: [your-project-id]
-      dataset: monzo_datawarehouse
+      project: analytics-take-home-test
+      dataset: Monzo_datawarehouse
       threads: 4
       timeout_seconds: 300
 ```
