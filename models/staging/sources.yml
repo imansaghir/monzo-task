@@ -1,0 +1,55 @@
+version: 2
+
+sources:
+  - name: monzo_data
+    database: analytics-take-home-test
+    schema: monzo_datawarehouse
+    freshness:
+      warn_after: {count: 1400, period: minute}
+      error_after: {count: 2800, period: minute}
+    tables:
+      - name: account_created
+        description: "Records of customer account creation events"
+        data_tests:
+          - table_not_empty
+        columns:
+          - name: account_id_hashed
+            description: "Unique identifier for each account"
+          - name: created_ts
+            description: "Timestamp when the account was created"
+          - name: user_id_hashed
+            description: "Unique identifier for the user"
+          - name: account_type
+            description: "The type of account opened"  
+
+      - name: account_closed
+        description: "Records of the events when customer accounts are closed"
+        data_tests:
+          - table_not_empty
+        columns:
+          - name: account_id_hashed
+            description: "Unique identifier for each account that is closed"
+          - name: closed_ts
+            description: "Timestamp when the account was closed"
+
+      - name: account_reopened
+        description: "Records of the event when previously closed accounts are reopened"
+        data_tests:
+          - table_not_empty
+        columns:
+          - name: account_id_hashed
+            description: "Unique identifier for each account reopening event"
+          - name: reopened_ts
+            description: "Timestamp when the account was reopened"
+
+      - name: account_transactions
+        description: "All transactions made on each customer account per day"
+        data_tests:
+          - table_not_empty
+        columns:
+          - name: date
+            description: "Date when the transactions occurred"
+          - name: account_id_hashed
+            description: "Unique identifier for each account"
+          - name: transactions_num
+            description: "Number of transactions made on the account on that day"

@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: mart_accounts
+    description: "Core accounts mart table with account status, history, and metrics"
+    columns:
+      - name: account_id
+        description: "Primary key - unique identifier for each account"
+        data_tests:
+          - unique
+          - not_null
+      - name: account_age_category
+        description: "Categorization of account age"
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['Young', 'Developing', 'Mature', 'Old']
+      - name: account_status
+        description: "Account status based on the last transaction date and account closure/reopening history"
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['Not Activated', 'Closed', 'Very Active', 'Active', 'Inactive', 'Dormant']
+      - name: activated_on_creation
+        description: "Flag indicating if the account was activated on creation"
+        data_tests:
+          - accepted_values:
+              values: [true, false]
+              quote: false
+      - name: activated_within_week
+        description: "Flag indicating if the account was activated within the first week"
+        data_tests:
+          - accepted_values:
+              values: [true, false]
+              quote: false
+
+  - name: mart_daily_user_activity
+    description: "Aggregates user activity metrics by cohort."
+    columns:
+      - name: cohort_date
+        description: "The date when a user first created an account"
+        tests:
+          - not_null
+      - name: cohort_month
+        description: "The month a user created an account, truncated to first day of month"
+        tests:
+          - not_null
+      - name: days_since_signup
+        description: "Number of days elapsed since a user created an account."
+        tests:
+          - not_null
+      - name: months_since_signup
+        description: "Number of months elapsed since a user created an account."
+        tests:
+          - not_null
+      - name: total_users
+        description: |
+          Count of users who have at least one open account on any given date, grouped by cohort.
+          A user is considered to have an open account if:
+          - They have never closed their account, or
+          - Their most recent account action was a reopen"Count of users with open accounts in this cohort"
+        tests:
+          - not_null
+      - name: active_users
+        description: "Count of users with open accounts who were also active in last 7 days in this cohort on any given date."
+        tests:
+          - not_null
+      - name: active_rate
+        description: "Percentage of open accounts that were active in last 7 days in this cohort (active_users / total_users) on any given date."
+     
+      

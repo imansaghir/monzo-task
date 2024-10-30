@@ -1,0 +1,51 @@
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'monzo'
+version: '1.0.0'
+
+profile: 'Monzo'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+# Target directory for compiled SQL files
+target-path: "target"
+clean-targets: 
+  - "target"
+  - "dbt_packages"
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/
+# directory as views. These settings can be overridden in the individual model
+# files using the `{{ config(...) }}` macro.
+models:
+  monzo:
+    # Configs that apply to all models
+    +persist_docs:
+      relation: true
+      columns: true
+
+    # Staging layer: raw data with minimal transformations
+    staging:
+      +materialized: view
+      +tags: ["staging"]
+
+    # Intermediate layer: normalized and cleaned data
+    intermediate:
+      +materialized: table
+      +tags: ["intermediate"]
+
+    # Marts/Final layer: business-ready data models
+    dimensions:
+      +materialized: table
+      +tags: ["marts"]

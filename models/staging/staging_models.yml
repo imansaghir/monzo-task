@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: stg_AccountCreated
+    description: "Records of customer account creation events"
+    columns:
+      - name: account_id
+        description: "Unique identifier for each account"
+        data_tests:
+          - unique
+          - not_null # unqiueness test as each account can only be created once
+      - name: user_id
+        description: "Unique identifier for the user"
+        data_tests:
+          - not_null # no uniqueness test as each user can have multiple accounts
+      - name: account_created_timestamp
+        description: "Timestamp when the account was created"
+        data_tests:
+          - not_null
+      - name: account_type
+        description: "The type of account opened"
+
+  - name: stg_AccountClosed
+    description: "Records of the event when customer accounts are closed"
+    columns:
+      - name: account_id
+        description: "Unique identifier for each account that is closed"
+        data_tests:
+          - not_null # no uniqueness test as an account can be reopened and then closed again
+          - relationships:
+              to: ref('stg_AccountCreated')
+              field: account_id
+      - name: account_closed_timestamp
+        description: "Timestamp when the account was closed"
+        data_tests:
+          - not_null
+          - assert_closed_after_created # custom test to ensure that the closed_ts is after the created_ts
+
+  - name: stg_AccountReopened
+    description: "Records of the event when previously closed accounts are reopened"
+    columns:
+      - name: account_id
+        description: "Unique identifier for each account reopening event"
+        data_tests:
+          - not_null  # no uniqueness test as an account can be reopened and then closed again
+          - relationships:
+              to: ref('stg_AccountClosed')
+              field: account_id
+      - name: account_reopened_timestamp
+        description: "Timestamp when the account was reopened"
+        data_tests:
+          - not_null
+          - assert_reopened_after_closed # custom test to ensure that the reopened_ts is after the closed_ts
+
+  - name: stg_AccountTransactions
+    description: "All transactions made by each customer account per day"
+    columns:
+      - name: account_id
+        description: "Unique identifier for each account"
+        data_tests:
+          - not_null  # no uniqueness test as multiple accounts can have transactions on the same day
+          - relationships:
+              to: ref('stg_AccountCreated')
+              field: account_id
+      - name: transaction_date
+        description: "date when the transactions occurred"
+        data_tests:
+          - not_null
+      - name: transaction_count
+        description: "Number of transactions made on the account on that day"
+        data_tests:
+          - not_null
+   
