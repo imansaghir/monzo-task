@@ -105,7 +105,6 @@ Raw data cleaning and standardization for:
 - `int_daily_user_status`: Daily snapshot of user activity status
   - Tracks account open/closed status
   - 7-day activity window
-  - Incrementally processed
 - `int_Accounts`: Consolidated account information
 
 ### Mart Layer (`/models/dimensions/`)
